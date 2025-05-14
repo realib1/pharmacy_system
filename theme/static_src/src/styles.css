@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+@import "tailwindcss";
+
+/**
+  * A catch-all path to Django template files, JavaScript, and Python files
+  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
+  *
+  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
+  * the scope of this path.
+  */
+@source "../../../**/*.{html,py,js}";
+
+
+@theme {
+
+      /* Custom Colors */
+    --color-dark: #1D242E;
+    --color-dark-light: #283342;
+    --color-danger: #F0483E;
+    --color-success: #01A768;
+    --color-warning: #FED600;
+    --color-primary: #03A9F5;
+    --color-secondary: #009099;
+
+  
+      /* Custom Font Families */
+    --font-inter: "Inter", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+}
+
+/* Sidebar Collapse Styles */
+#sidebar.w-20 .sidebar-text {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#sidebar.w-20 .nav-list span:not(.bg-danger),
+#sidebar.w-20 .nav-list img[alt="arrow-down"] {
+    display: none;
+}
+
+#sidebar.w-20 .logo,
+#sidebar.w-20 .nav-list a,
+#sidebar.w-20 .profile-user {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    justify-content: center;
+}
+
+#sidebar.w-20 .user-menu,
+#sidebar.w-20 .ml-auto {
+    display: none;
+}
+
+#sidebar.w-20 #sidebarToggle img {
+    transform: rotate(180deg);
+}

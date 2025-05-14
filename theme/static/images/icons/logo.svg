@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Base Box (Inventory) -->
+    <path d="M8 12L24 4L40 12V36L24 44L8 36V12Z" fill="#283342"/>
+    <path d="M24 4L40 12L24 20L8 12L24 4Z" fill="#009099"/>
+    <path d="M24 44V20M40 12V36L24 44L8 36V12L24 4L40 12Z" stroke="#03A9F5" stroke-width="2"/>
+    
+    <!-- Pill Symbol -->
+    <path d="M20 16H28M24 12V20" stroke="#01A768" stroke-width="3" stroke-linecap="round"/>
+</svg>
