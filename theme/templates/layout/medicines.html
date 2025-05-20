@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+  Medicines
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container">
+    <div class="p-4 flex justify-between items-center">
+      <div class="header mb-4">
+        <h1 class="text-2xl text-gray-800 font-bold">Medicine List ({{ medicines_count }})</h1>
+        <p class="text-gray-600 text-sm">List of medicines available for sales.</p>
+      </div>
+
+      {% comment %}Add medicine{% endcomment %}
+      <div class="mb-4">
+        <a href="{% url 'add_medicine' %}" class="bg-secondary flex items-center text-white text-sm px-3 py-2 rounded">
+          <svg class="mr-1" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 8H8V13C8 13.55 7.55 14 7 14C6.45 14 6 13.55 6 13V8H1C0.45 8 0 7.55 0 7C0 6.45 0.45 6 1 6H6V1C6 0.45 6.45 0 7 0C7.55 0 8 0.45 8 1V6H13C13.55 6 14 6.45 14 7C14 7.55 13.55 8 13 8Z" fill="white" />
+          </svg>Add Medicine
+        </a>
+      </div>
+    </div>
+
+    {% comment %}Search and filter{% endcomment %}
+    <div class="flex items-center justify-between mb-4">
+      <div class="w-1/2">
+        <form action="" method="get" class="relative">
+          <input type="text" name="search" placeholder="{% trans 'Search medicine here...' %}" class="text-sm w-full py-2 px-4 rounded ring ring-gray-400 border-none focus:outline-none focus:ring-2 focus:ring-secondary" />
+          <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-secondary" aria-label="{% trans 'Search' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 focus:text-secondary">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="filter">
+        <svg class="w-6 h-6 text-gray-600 inline-block mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z" />
+        </svg>
+
+        <select class="ring ring-gray-400 focus:ring-secondary rounded p-2 text-sm">
+          <option value="">All Categories</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+        <select class="ring ring-gray-400 focus:ring-secondary rounded p-2 text-sm">
+          <option value="">All Manufacturers</option>
+          {% for manufacturer in manufacturers %}
+            <option value="{{ manufacturer.id }}">{{ manufacturer.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <table class="border-collapse border border-gray-400 w-full">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">#</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Medicine Name</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Batch Number</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Category</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Stock Qty</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Price(GH₵)</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Expiry Date</th>
+          <th class="text-start text-gray-700 font-semibold px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for med in medicines %}
+          <tr class="border-t">
+            <td class="text-gray-700 text-sm px-4 py-2">{{ forloop.counter }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">{{ med.name }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">{{ med.batch_number }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">{{ med.category }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">{{ med.quantity  }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">GH₵{{ med.price  }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">{{ med.expiry_date }}</td>
+            <td class="text-gray-700 text-sm px-4 py-2">
+              <a href="{% url 'edit_medicine' med.pk %}" class="flex items-center text-primary hover:underline">
+                Details<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                </svg>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

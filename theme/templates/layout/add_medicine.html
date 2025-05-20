@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Medicine{% endblock %}
+
+{% block content %}
+<div class="p-4 max-w-xl mx-auto pb-20">
+    <h1 class="text-2xl font-bold mb-4">Add New Medicine</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-4">
+    {{ form |crispy }}
+
+    <div class="mt-5 flex justify-between items-center space-x-5">
+        <button type="submit" class="bg-success/80 hover:bg-success text-white px-8 py-2 max-w-1/2 w-full rounded cursor-pointer">Save</button>
+        <button type="reset" class="bg-danger/80 hover:bg-danger text-white px-8 py-2 max-w-1/2 w-full rounded cursor-pointer my-5">Reset</button>
+    </div>
+</div>
+</form>
+<div class="mt-4">
+    <a href="{% url 'medicines' %}" class="bg-gray-300 px-4 py-2 rounded">Back to Medicine List</a>
+</div>
+
+{% endblock %}

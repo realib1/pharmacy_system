@@ -16,3 +16,5 @@ def create_user_profile(sender, instance, created, **kwargs):
             role=default_role,
             position='Staff Member'  # Default position
         )
+    else:
+        instance.profile.save()

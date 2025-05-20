@@ -57,3 +57,16 @@
 #sidebar.w-20 #sidebarToggle img {
     transform: rotate(180deg);
 }
+
+.language-toggle {
+  display: flex !important;
+  visibility: visible !important;
+  z-index: 30;
+}
+.dropdown-menu:not(.user-menu):not(#language-menu) {
+  position: relative;
+  margin-left: 1rem;
+}
+#language-menu {
+  z-index: 20;
+}

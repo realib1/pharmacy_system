@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Category, Medicine, Supplier, UserRole, UserProfile
+from .models import Category, Medicine, Supplier, UserRole, UserProfile, MedicineSale
+from django.utils.translation import gettext_lazy as _
+
+
+admin.site.register(MedicineSale)
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -50,3 +54,4 @@ class CategoryAdmin(admin.ModelAdmin):
 class SupplierAdmin(admin.ModelAdmin):
     list_display = ('name', 'contact_info')
     search_fields = ('name', 'contact_info')
+    

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ValidationError
 
 class UserRole(models.Model):
     ROLE_CHOICES = [
@@ -21,7 +22,9 @@ class UserProfile(models.Model):
     role = models.ForeignKey(UserRole, on_delete=models.PROTECT)
     position = models.CharField(max_length=100, blank=True)
     department = models.CharField(max_length=100, blank=True)
-    phone_number = models.CharField(max_length=20, blank=True)
+    phone_number = models.CharField(max_length=20, blank=False)
+    email_address = models.EmailField(max_length=250, blank=True)
+    address = models.CharField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -51,11 +54,38 @@ class Medicine(models.Model):
     quantity = models.PositiveIntegerField()
     batch_number = models.CharField(max_length=255, unique=True)
     manufacturer = models.CharField(max_length=255)
+    manufactured_date = models.DateField(null=True, blank=True)
     expiry_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='medicines')
     supplier = models.ForeignKey('Supplier', on_delete=models.SET_NULL, null=True, blank=True)
-    
+    image_upload = models.ImageField(upload_to='medicines/', blank=True, null=True)
+
+    def clean(self):
+        if self.expiry_date <= self.manufactured_date:
+            raise ValidationError("Expiry date must be after manufactured date.")
+        if self.price <= 0:
+            raise ValidationError("Price must be a positive number.")
+        if self.quantity < 0:
+            raise ValidationError("Quantity cannot be negative.")
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
+
+class MedicineSale(models.Model):
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+    quantity_sold = models.PositiveIntegerField()
+    price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True)
+    sold_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    @property
+    def total_amount(self):
+        return self.quantity_sold * self.price_per_unit
+
+    def __str__(self):
+        return f"Sale of {self.medicine.name} on {self.date.strftime('%Y-%m-%d')}"

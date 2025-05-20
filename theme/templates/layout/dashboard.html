@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}Dashboard{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container p-4 space-y-6">
+
+    <div class="flex justify-between items-center mb-4">
+
+        <div class="header">
+            <h1 class="text-2xl font-bold">Dashboard</h1>
+            <p class="text-gray-600 text-sm">A quick overview of your pharmacy's performance.</p>
+        </div>
+
+         <div class="relative inline-block text-left">
+  
+    <button id="downloadButton" type="button" class="download-toggle bg-gray-300 text-sm text-gray-800 px-4 py-2 rounded inline-flex items-center cursor-pointer"
+          aria-controls="download-menu" aria-expanded="false">
+    <svg class="inline size-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+    </svg>
+
+    Download Report
+    <svg class="ml-2 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.586l3.71-4.356a.75.75 0 011.14.976l-4.25 5a.75.75 0 01-1.14 0l-4.25-5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+    </svg>
+
+  </button>
+
+  <div id="download-menu" class="dropdown-menu hidden absolute z-20 mt-2 w-34 bg-white border border-secondary rounded shadow-lg">
+     <a href="{% url 'download_pdf_report' %}" class="flex items-center px-4 py-2 text-gray-800 hover:bg-secondary hover:text-white text-xs">
+   
+    <svg class="mr-1" width="12" height="12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"/>
+</svg>
+ 
+PDF</a>
+
+<hr class="border-t border-secondary">
+    <a href="{% url 'download_excel_report' %}" class="flex items-center px-4 py-2 text-gray-800 hover:bg-secondary hover:text-white text-xs">
+         <svg class="mr-1" width="12" height="12" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.14 7L9.1 9.8H7.42L6.3 8.1998L5.18 9.8H3.5L5.46 7L3.5 4.2H5.18L6.3 5.8002L7.42 4.2H8.4V1.4H1.4V12.6H11.2V4.2H9.1L7.14 7ZM0 0.6944C0 0.3108 0.3129 0 0.6993 0H9.1L12.6 3.5V13.2951C12.6006 13.387 12.5832 13.4782 12.5486 13.5634C12.514 13.6485 12.463 13.7261 12.3984 13.7915C12.3339 13.857 12.2571 13.9091 12.1724 13.9448C12.0877 13.9806 11.9968 13.9994 11.9049 14H0.6951C0.511265 13.9987 0.335312 13.9252 0.205252 13.7952C0.0751925 13.6653 0.00146625 13.4894 0 13.3056V0.6944Z" fill="currentColor"/>
+</svg>
+ Excel</a>
+
+
+  </div>
+</div>
+</div>
+
+  <!-- Metrics -->
+  <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+    <div class="bg-white border-2 border-success/50 shadow rounded text-center h-50">
+        <img src="{% static 'images/icons/status.svg' %}" alt="Inventory Status" class="w-15 h-15 mx-auto mb-2 mt-4">
+            {% if total_medicines > 10 %}
+            <h2 class="text-success text-2xl  font-bold flex items-center justify-center mx-auto mb-2">Good</h2>
+            {% else %}
+            <h2 class="text-danger text-2xl font-bold flex items-center justify-center mx-auto mb-2">Low</h2>
+            {% endif %}
+
+        <h2 class="text-gray-700 font-semibold">Inventory Status</h2>
+        <div class="report-view bg-success/50 p-1 w-full mt-2 -bottom-2 relative">
+            <a href="{% url 'medicines' %}" class="hover:underline text-sm bottom-0">View Report
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="Arrow Right" class="inline-block ml-1">
+            </a>
+        </div>
+    </div>
+
+
+    <div class="bg-white border-2 border-warning/50 shadow rounded text-center h-50">
+        <img src="{% static 'images/icons/revenue.svg' %}" alt="Inventory Status" class="w-15 h-15 mx-auto mb-2 mt-4">
+          
+            <h2 class="text-gray-700 text-2xl font-bold flex items-center justify-center mx-auto mb-2">
+                GH₵
+                {% comment %} Check if revenue is lower than previous year {% endcomment %}
+                {% if revenue < previous_year_revenue %}
+                    <span class="text-danger">{{ revenue }}</span>
+                {% else %}
+                    <span class="text-success">{{ revenue }}</span>
+                {% endif %}
+            </h2>
+<h2 class="text-gray-700 font-semibold mt-4 flex items-center justify-center mx-auto mb-2">
+     {% comment %} Check if revenue is lower than previous year {% endcomment %}
+     {% if total_revenue < previous_year_revenue %}
+         <span class="text-danger">Revenue: {{ total_revenue|floatformat:2 }}</span>
+     {% else %}
+         <span class="text-success">Revenue: {{ total_revenue|floatformat:2 }}</span>
+     {% endif %}
+    
+<form method="get" id="filter-form">
+    <select name="period" class="text-sm" onchange="document.getElementById('filter-form').submit();">
+        <option value="" class="">Select</option>
+        {% for year in years %}
+            {% for num, name in months %}
+                {% with value=num|stringformat:"02"|add:"-"|add:year|stringformat:"s" %}
+                    {% comment %} <option value="{{ value }}" {% if selected_period == value %}selected{% endif %}> {% endcomment %}
+                        {% comment %} {{ name }} {{ year }}
+                    </option> {% endcomment %}
+                {% endwith %}
+            {% endfor %}
+        {% endfor %}
+    </select>
+</form>
+
+</h2>
+
+        <div class="report-view bg-warning/50 p-1 w-full mt-2">
+            <a href="{% url 'medicines' %}" class="hover:underline text-sm">View Report
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="Arrow Right" class="inline-block ml-1">
+            </a>
+        </div>
+    </div>
+   
+    <div class="bg-white border-2 border-primary/50 shadow rounded text-center h-50">
+        <img src="{% static 'images/icons/available.svg' %}" alt="Inventory Status" class="w-15 h-15 mx-auto mb-2 mt-4">
+            <h2 class="text-danger text-2xl  font-bold flex items-center justify-center mx-auto mb-2">{{medicines_count}}</h2>
+        <h2 class="text-gray-700 font-semibold">Medicine Available</h2>
+        <div class="report-view bg-primary/50 p-1 w-full mt-2">
+            <a href="{% url 'medicines' %}" class="hover:underline text-sm">View Report
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="Arrow Right" class="inline-block ml-1">
+            </a>
+        </div>
+    </div>
+   
+    <div class="bg-white border-2 border-danger/50 shadow rounded text-center h-50">
+        <img src="{% static 'images/icons/shortage.svg' %}" alt="Inventory Status" class="w-15 h-15 mx-auto mb-2 mt-4">
+            <h2 class="text-danger text-2xl  font-bold flex items-center justify-center mx-auto mb-2">10
+                {% comment %} Check for medicines less than 10 and show count of medicine less than 10 {% endcomment %}
+                {% if total_medicines < 10 %}
+                    <span class="text-danger">{{ total_medicines }}</span>
+                {% else %}
+                    <span class="text-success">{{ total_medicines }}</span>
+                {% endif %}
+            </h2>
+          
+        <h2 class="text-gray-700 font-semibold">Medicine Shortage</h2>
+        <div class="report-view bg-danger/50 p-1 w-full mt-2">
+            <a href="{% url 'medicines' %}" class="hover:underline text-sm">View Report
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="Arrow Right" class="inline-block ml-1">
+            </a>
+        </div>
+    </div>
+  </div>
+
+
+
+  {% comment %} Inventory {% endcomment %}
+  <div class="grid grid-col-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 mt-4 rounded">
+    
+    <div class="bg-white border-2 border-gray-300 shadow rounded">
+        <div class="header mb-4 border-b-2 border-gray-300 p-2 flex justify-between items-center">
+            <h2 class="text-gray-700 font-bold">Inventory</h2>
+            <a href="" class="configuration block text-sm text-gray-600 hover:underline">Configuration
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="go to" class="inline-block ml-1">
+            </a>
+        </div>
+        <div class="details p-4 flex justify-around items-center">
+            <div class="total flex flex-col justify-center items-center">
+                {% comment %} Text color red for less than 10 {% endcomment %}
+               {% if medicines_count < 10 %}
+                    <h2 class="medicine-count text-danger font-bold text-2xl">{{medicines_count}}</h2>
+                {% else %}
+                    <h2 class="medicine-count font-bold text-2xl">{{medicines_count}}</h2>
+                {% endif %}
+                <p class="text-gray-700 text-sm font-medium">Total Medicines</p>
+            </div>
+            <div class="medicines-group flex flex-col justify-center items-center">
+               <h2 class="medicine-count font-bold text-2xl">{{categories_count}}</h2>
+                <p class="text-gray-700 text-sm font-medium">Medicines Category</p>
+            </div>
+          
+        </div>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 shadow rounded">
+        <div class="header mb-4 border-b-2 border-gray-300 p-2 flex justify-between items-center">
+            <h2 class="text-gray-700 font-bold">Quick Report</h2>
+            <a href="" class="configuration block text-sm text-gray-600 hover:underline">Configuration
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="go to" class="inline-block ml-1">
+            </a>
+        </div>
+        <div class="details p-4 flex justify-around items-center">
+            <div class="total flex flex-col justify-center items-center">
+                {% comment %} Text color red for less than 10 {% endcomment %}
+               {% if medicines_count < 10 %}
+                    <h2 class="medicine-count text-danger font-bold text-2xl">{{medicines_count}}</h2>
+                {% else %}
+                    <h2 class="medicine-count font-bold text-2xl">{{medicines_count}}</h2>
+                {% endif %}
+                <p class="text-gray-700 text-sm font-medium">Total Medicines</p>
+            </div>
+            <div class="medicines-group flex flex-col justify-center items-center">
+               <h2 class="medicine-count font-bold text-2xl">{{categories_count}}</h2>
+                <p class="text-gray-700 text-sm font-medium">Medicines Category</p>
+            </div>
+          
+        </div>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 shadow rounded">
+        <div class="header mb-4 border-b-2 border-gray-300 p-2 flex justify-between items-center">
+            <h2 class="text-gray-700 font-bold">Pharmacy</h2>
+            <a href="" class="configuration block text-sm text-gray-600 hover:underline">Configuration
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="go to" class="inline-block ml-1">
+            </a>
+        </div>
+        <div class="details p-4 flex justify-around items-center">
+            <div class="total flex flex-col justify-center items-center">
+                {% comment %} Text color red for less than 10 {% endcomment %}
+               {% if medicines_count < 10 %}
+                    <h2 class="medicine-count text-danger font-bold text-2xl">{{medicines_count}}</h2>
+                {% else %}
+                    <h2 class="medicine-count font-bold text-2xl">{{medicines_count}}</h2>
+                {% endif %}
+                <p class="text-gray-700 text-sm font-medium">Total Medicines</p>
+            </div>
+            <div class="medicines-group flex flex-col justify-center items-center">
+               <h2 class="medicine-count font-bold text-2xl">{{categories_count}}</h2>
+                <p class="text-gray-700 text-sm font-medium">Medicines Category</p>
+            </div>
+          
+        </div>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 shadow rounded">
+        <div class="header mb-4 border-b-2 border-gray-300 p-2 flex justify-between items-center">
+            <h2 class="text-gray-700 font-bold">Customers</h2>
+            <a href="" class="configuration block text-sm text-gray-600 hover:underline">Configuration
+                <img src="{% static 'images/icons/arrows-2.svg' %}" alt="go to" class="inline-block ml-1">
+            </a>
+        </div>
+        <div class="details p-4 flex justify-around items-center">
+            <div class="total flex flex-col justify-center items-center">
+                {% comment %} Text color red for less than 10 {% endcomment %}
+               {% if medicines_count < 10 %}
+                    <h2 class="medicine-count text-danger font-bold text-2xl">{{medicines_count}}</h2>
+                {% else %}
+                    <h2 class="medicine-count font-bold text-2xl">{{medicines_count}}</h2>
+                {% endif %}
+                <p class="text-gray-700 text-sm font-medium">Total Medicines</p>
+            </div>
+            <div class="medicines-group flex flex-col justify-center items-center">
+               <h2 class="medicine-count font-bold text-2xl">{{categories_count}}</h2>
+                <p class="text-gray-700 text-sm font-medium">Medicines Category</p>
+            </div>
+          
+        </div>
+    </div>
+
+</div>
+
+</div>
+{% endblock %}
