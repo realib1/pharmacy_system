@@ -70,3 +70,12 @@
 #language-menu {
   z-index: 20;
 }
+
+#sidebar {
+    overflow: hidden;
+}
+
+#user-menu, #language-menu, #download-menu {
+    z-index: 50;
+    transition: all 0.3s ease-in-out;
+}
